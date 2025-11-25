@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Espace Administrateur - Spring Security</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .nav-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-home { border-left: 5px solid #10b981; }
+        .card-user { border-left: 5px solid #3b82f6; }
+        .card-admin { border-left: 5px solid #8b5cf6; background: #faf5ff; }
+        .card-logout { border-left: 5px solid #ef4444; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #8b5cf6;
+        }
+        
+        .stat-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .admin-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .panel-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .panel-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        
+        .panel-header p {
+            color: #64748b;
+            font-size: 1.2rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid #f1f5f9;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .feature-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            display: block;
+        }
+        
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        
+        .feature-desc {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+        
+        .access-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
+        }
+        
+        .access-warning h3 {
+            color: #92400e;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .access-warning p {
+            color: #92400e;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-panel {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Administration Système</h1>
+            <div class="admin-badge">ACCÈS ADMINISTRATEUR COMPLET</div>
+            
+            <div class="nav-grid">
+                <a href="/" class="nav-card card-home">
+                    <span style="font-size: 1.5rem;">🏠</span>
+                    <div style="font-weight: 600; margin-top: 10px;">Accueil</div>
+                </a>
+                
+                <a href="/user/dashboard" class="nav-card card-user">
+                    <span style="font-size: 1.5rem;">👤</span>
+                    <div style="font-weight: 600; margin-top: 10px;">Espace Utilisateur</div>
+                </a>
+                
+                <a href="/admin/dashboard" class="nav-card card-admin">
+                    <span style="font-size: 1.5rem;">⚙️</span>
+                    <div style="font-weight: 600; margin-top: 10px;">Espace Admin</div>
+                </a>
+                
+                <a href="/logout" class="nav-card card-logout">
+                    <span style="font-size: 1.5rem;">🚪</span>
+                    <div style="font-weight: 600; margin-top: 10px;">Déconnexion</div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <div class="stat-number">1,254</div>
+                <div class="stat-label">Utilisateurs Actifs</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">📈</span>
+                <div class="stat-number">89%</div>
+                <div class="stat-label">Performance Système</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🆕</span>
+                <div class="stat-number">42</div>
+                <div class="stat-label">Nouveaux Aujourd'hui</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">⚠️</span>
+                <div class="stat-number">0</div>
+                <div class="stat-label">Alertes Critiques</div>
+            </div>
+        </div>
+        
+        <div class="admin-panel">
+            <div class="panel-header">
+                <h2>🎛️ Panel d'Administration</h2>
+                <p>Gestion complète du système Spring Security</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">👥</span>
+                    <div class="feature-title">Gestion des Utilisateurs</div>
+                    <div class="feature-desc">
+                        Créez, modifiez et supprimez des comptes utilisateurs avec des permissions avancées. 
+                        Gérez les profils, les rôles et les accès avec une interface intuitive.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">🔐</span>
+                    <div class="feature-title">Sécurité et Rôles</div>
+                    <div class="feature-desc">
+                        Configurez les politiques de sécurité, gérez les rôles d'accès hiérarchiques 
+                        et surveillez les activités suspectes en temps réel.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-title">Analytics & Rapports</div>
+                    <div class="feature-desc">
+                        Surveillez les performances système, générez des rapports détaillés 
+                        et analysez les métriques d'utilisation avec des graphiques interactifs.
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <span class="feature-icon">⚙️</span>
+                    <div class="feature-title">Paramètres Système</div>
+                    <div class="feature-desc">
+                        Configuration avancée des paramètres de l'application, gestion de la base de données 
+                        et intégration des services externes.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="access-warning">
+                <h3>🔒 Zone Administrateur Exclusif</h3>
+                <p>Cette page est <strong>exclusivement réservée</strong> au rôle <strong>ADMIN</strong>.</p>
+                <p>Les utilisateurs standards ne peuvent pas accéder à cette section sécurisée.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
